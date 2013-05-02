@@ -1,0 +1,164 @@
+﻿@using Eclatech.CollegeManagement.Web.Resources
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Users List</h3>
+<div class="btn-toolbar search-grid" data-bind="with: searchUI">
+    <div class="btn-group pull-left" data-bind="selectedSearchOption: selected">
+        <div class="btn" data-value="All">All</div>
+        <div class="btn" data-value="Active">Active</div>
+        <div class="btn" data-value="InActive">In Active</div>
+    </div>
+    <div class="btn-group input-append">
+        <input type="text" class="span9" id="appendedInputButtons" data-bind="value: SearchTerm" />
+        <button type="button" class="btn" data-bind="click: $parent.getData">Search</button>
+    </div>
+</div>
+<div class="row-fluid">
+    @Html.ActionLink("Create New User", Actions.Register, Controllers.Account, new { Area = "" }, new { @class = "btn" })
+</div>
+<div class="row-fluid">
+    <table class="table table-striped">
+        <tr>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>User Type</th>
+            <th>Registration Date</th>
+            <th>Registration IP</th>
+            <th>Is Active?</th>
+            <th>Actions</th>
+        </tr>
+        <tbody data-bind="foreach: rows">
+            <tr>
+                <td data-bind="text: UserName"></td>
+                <td data-bind="text: Email"></td>
+                <td data-bind="text: UserTypeString"></td>
+                <td data-bind="text: RegistrationDate"></td>
+                <td data-bind="text: RegistrationIp"></td>
+                <td data-bind="html: IsActive"></td>
+                <td>
+                    <a data-bind="attr: {href: EditUrl}" class="btn btn-mini btn-primary">Edit</a>
+                    <a data-bind="attr: {href: DeleteUrl}" class="btn btn-mini btn-danger">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="pagination pagination-centered">
+    <ul>
+        
+        <!-- ko if: pages().length > 1 -->
+        <li><a href="#" data-bind="click: function(){ goToFirstPage(); }">First</a></li>
+        <li><a href="#" data-bind="click: function(){ goToPrevPage(); }">Prev</a></li>
+        <!-- /ko -->
+
+        <!-- ko  foreach: pages -->
+        <li><a href="#" data-bind="text: page, click: function(){ $parent.goToPage( page); }"></a></li>
+        <!-- /ko -->
+        
+        <!-- ko if: pages().length > 1 -->
+        <li><a href="#" data-bind="click: function(){ goToNextPage(); }">Next</a></li>
+        <li><a href="#" data-bind="click: function(){ goToLastPage(); }">Last</a></li>
+        <!-- /ko -->
+    </ul>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        var User = function UserF(data) {
+            var self = this;
+
+            self.Id = ko.observable(data.EncryptedUserId);
+            self.UserName = ko.observable(data.UserName);
+            self.Email = ko.observable(data.Email);
+            self.UserType = ko.observable(data.UserType);
+            self.UserTypeString = ko.observable(data.UserTypeString);
+            self.RegistrationDate = ko.observable(moment(data.RegistrationDate).fromNow());
+            self.RegistrationIp = ko.observable(data.RegistrationIp);
+            self.IsActive = ko.computed(function () {
+                var active = data.IsActive ? "<span class='label label-success'>Active</span>" : "<span class='label label-warning'>In Active</span>";
+                var checked = data.IsActive ? "checked='checked'" : "";
+                return "<input type='checkbox' class='user-is-active' value='"+ self.Id() +"' " + checked + " />&nbsp;" + active;
+            });
+
+            self.EditUrl = ko.computed(function () {
+                return "@Url.Action(Actions.User_Update, Controllers.User)/" + self.Id();
+            });
+
+            self.DeleteUrl = ko.computed(function() {
+                return "@Url.Action(Actions.User_Delete, Controllers.User)/" + self.Id();
+            });
+        };
+
+        var config, ui;
+
+        $(function () {
+            config = {
+                hostUrl: "@Url.Action(Actions.Search, Controllers.User)",
+                defaultSelected: "All",
+                searchCriteria: function (selected, searchTerm, pageNumber) {
+                    var isActive;
+                    switch (selected) {
+                        case ("All"):
+                            isActive = null;
+                            break;
+                        case("Active"):
+                            isActive = true;
+                            break;
+                        
+                        case ("InActive"):
+                            isActive = false;
+                            break;
+                        default :
+                            isActive = null;
+                            break;
+                    }
+                    console.log(isActive);
+                    return {
+                        Filter: searchTerm,
+                        IsActive: isActive,
+                        PageNumber: pageNumber
+                    };
+                },
+                createRow: function (data) {
+                    //console.log(data);
+                return new User(data);
+            }
+            };
+
+            ui = new GridUI(config);
+            ko.applyBindings(ui);
+            
+            //to change page number as 1 on applying filter
+            $(".search-grid .btn").click(function () {
+                //ui.currentPage(1);
+            });
+
+            //to map is active check box to ajax method
+            $(".user-is-active").live("click", function () {
+                if ($(this).attr("checked")) {
+                    $(this).next().removeClass("label-warning");
+                    $(this).next().addClass("label-success");
+                    $(this).next().text("Active");
+                }
+                else {
+                    $(this).next().removeClass("label-success");
+                    $(this).next().addClass("label-warning");
+                    $(this).next().text("In Active");
+                }
+                var config = {
+                    hostUrl: "@Url.Action(Actions.UpdateUserStatus, Controllers.User)",
+                    params: {
+                        UserId: $(this).val(),
+                        IsActive: $(this).attr("checked") ? true : false
+                    }
+                };
+
+              new UpdateUI(config);
+            });
+    });
+    </script>
+}

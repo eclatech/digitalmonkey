@@ -1,0 +1,20 @@
+﻿@using Eclatech.CollegeManagement.Web.Resources
+@using Eclatech.CollegeManagement.BusinessObjects
+@model Eclatech.CollegeManagement.Common.Web.Models.ViewModel<Users>
+
+
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Update</h3>
+
+@if (Model.HasValue)
+{
+    using (Html.BeginForm(Actions.User_Update, Controllers.User, new { Area = Areas.Admin }, FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.Partial(Views.ADMIN_USERS_ADD_EDIT, Model.Value)
+    }
+
+}

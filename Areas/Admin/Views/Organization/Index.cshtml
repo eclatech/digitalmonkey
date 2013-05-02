@@ -1,0 +1,104 @@
+﻿@using Eclatech.CollegeManagement.Web.Resources
+@model Eclatech.CollegeManagement.BusinessObjects.Organization
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Organization Details</h3>
+
+@using(Html.BeginForm(Actions.Organization_Update, Controllers.Organization, new { @area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div class="row-fluid">
+        <div class="control-group">
+            @Html.LabelFor(m => m.OrgName, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.OrgName)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.OwnerName, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.OwnerName)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.Name, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.Name)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.Address1, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.Address1)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.Address2, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.Address2)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.CityId, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.CityId)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.Zip, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.Zip)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.Phone, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.Phone)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.Cell, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.Cell)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.Fax, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.Fax)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.Email, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.Email)
+            </div>
+        </div>
+    
+        <div class="control-group">
+            @Html.LabelFor(m => m.Address.Website, new {@class = "control-label"})
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Address.Website)
+            </div>
+        </div>
+        @Html.Partial(Views.Location, Model.Location)
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" />
+            </div>
+        </div>
+    </div>
+}

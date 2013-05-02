@@ -1,0 +1,9 @@
+﻿@using WebMatrix.WebData;
+@{
+    WebSecurity.InitializeDatabaseConnection(
+                    "DefaultConnection",
+                    "Users",
+                    "UserId",
+                    "UserName",
+                    autoCreateTables: true);
+}

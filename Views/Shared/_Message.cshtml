@@ -1,0 +1,16 @@
+﻿@using Eclatech.CollegeManagement.Common.Web.Helpers
+
+@if(!string.IsNullOrEmpty(CommonHelper.GetSuccessMessage(TempData[CommonHelper.SuccessMessageKey])))
+{
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        @CommonHelper.GetSuccessMessage(TempData[CommonHelper.SuccessMessageKey])
+    </div>
+}
+else if(!string.IsNullOrEmpty(CommonHelper.GetErrorMessage(TempData[CommonHelper.ErrorMessageKey])))
+{
+    <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        @CommonHelper.GetErrorMessage(TempData[CommonHelper.ErrorMessageKey])
+    </div>
+}

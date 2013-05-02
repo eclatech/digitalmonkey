@@ -1,0 +1,51 @@
+﻿@using Eclatech.CollegeManagement.Web.Resources
+@model Eclatech.CollegeManagement.BusinessObjects.Location
+
+<div class="control-group">
+    @Html.LabelFor(m => m.Id, new { @class = "control-label" })
+    <div class="controls">
+        @Html.DropDownListFor(m => m.Id, Model.Countries , new { @class = "location" })
+        @Html.TextBoxFor(m => m.Name, new { @class = "display-none"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(m => m.StateId, new { @class = "control-label" })
+    <div class="controls">
+        @Html.DropDownListFor(m => m.StateId, Model.States, new { @class = "location" })
+        @Html.TextBoxFor(m => m.StateName, new { @class = "display-none"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(m => m.CityId, new { @class = "control-label" })
+    <div class="controls">
+        @Html.DropDownListFor(m => m.CityId, Model.Cities , new { @class = "location" })
+        @Html.TextBoxFor(m => m.CityName, new { @class = "display-none"})
+    </div>
+</div>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $("select.location").change(function () {
+                if ($(this).val().toLowerCase() == "new") {
+                    $(this).next().toggleClass("display-none");
+                }
+                else {
+                    GetStatesByCountryId($(this).val());
+                    $(this).next().addClass("display-none");
+                }
+            });
+        });
+        
+        function GetStatesByCountryId(id) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(Actions.Location_Get_States, Controllers.Location, new{ @area = "" })',
+                data: { id: id },
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+    </script>
